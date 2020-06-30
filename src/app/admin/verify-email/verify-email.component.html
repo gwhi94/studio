@@ -1,27 +1,27 @@
-<div class="displayTable">
-    <div class="displayTableCell">
-  
-      <div class="authBlock">
-        <h3>Thank You for Registering</h3>
-  
-        <div class="formGroup" *ngIf="authService.userData as user">
-          <p class="text-center">We have sent a confirmation email to <strong>{{user.email}}</strong>.</p>
-          <p class="text-center">Please check your email and click on the link to verfiy your email address.</p>
+
+  <div *ngIf="authService.userData as user" class="uk-section uk-section-muted uk-flex uk-flex-middle uk-animation-fade" uk-height-viewport>
+    <div class="uk-width-1-1">
+      <div class="uk-container">
+        <div class="uk-grid-margin uk-grid uk-grid-stack" uk-grid>
+          <div class="uk-width-1-1@m">
+            <div class="uk-margin uk-width-large uk-margin-auto uk-card uk-card-default uk-card-body uk-box-shadow-large">
+              <h3 class="uk-card-title uk-text-center">Thank you for creating a Studio Account</h3>
+              <h5 class="uk-text-center">A verification email has been sent to {{user.email}}</h5>
+              <form>     
+                <div class="uk-margin">
+                  <button (click)="authService.SendVerificationMail()" class="uk-button uk-button-primary uk-button-large uk-width-1-1">Resend Verification email</button>
+                </div>
+                <div class="uk-text-small uk-text-center">
+                  Back to <a routerLink="/login" href="#">Login</a>
+                </div>
+              </form>
+            </div>
+          </div>
         </div>
-        
-        <!-- Calling SendVerificationMail() method using authService Api -->
-        <div class="formGroup">
-          <button type="button" class="btn btnPrimary" (click)="authService.SendVerificationMail()">
-            <i class="fas fa-redo-alt"></i>
-            Resend Verification Email
-          </button>
-        </div>
-  
       </div>
-  
-      <div class="redirectToLogin">
-        <span>Go back to?<span class="redirect" routerLink="/login"> Sign in</span></span>
-      </div>
-  
     </div>
   </div>
+  
+  
+  
+  

@@ -8,7 +8,7 @@ import { AuthService } from '../../services/auth.service';
 })
 export class ForgotPasswordComponent implements OnInit {
 
-  constructor() { }
+  constructor(private authService:AuthService) { }
 
   ngOnInit() {
   }

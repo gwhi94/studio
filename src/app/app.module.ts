@@ -1,5 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';  
 
 
 import { AppRoutingModule } from './app-routing.module';
@@ -17,7 +18,7 @@ import { AuthService } from './services/auth.service';
 import { RegisterComponent } from './admin/register/register.component';
 import { VerifyEmailComponent } from './admin/verify-email/verify-email.component';
 import { ForgotPasswordComponent } from './admin/forgot-password/forgot-password.component';
-
+import { FormsModule } from '@angular/forms';
 
 
 @NgModule({
@@ -35,7 +36,9 @@ import { ForgotPasswordComponent } from './admin/forgot-password/forgot-password
     AngularFireModule.initializeApp(environment.firebase, 'studio'),
     AngularFirestoreModule,
     StudioFeedModule,
-    AngularFireAuthModule
+    AngularFireAuthModule,
+    FormsModule,
+    CommonModule
   ],
   providers: [AuthService],
   bootstrap: [AppComponent]

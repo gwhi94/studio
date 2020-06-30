@@ -13,10 +13,17 @@ import { AuthService } from 'src/app/services/auth.service';
 export class LoginComponent implements OnInit {
 
   error: any;
+  user = {email:'', password:''};
   constructor(private authService:AuthService) {}
 
 
+
   ngOnInit() {
+  }
+
+  logIn(){
+    console.log(this.user);
+    this.authService.SignIn(this.user.email, this.user.password);
   }
 
 }
