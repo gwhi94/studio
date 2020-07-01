@@ -10,17 +10,23 @@
                 <div class="uk-margin">
                   <div class="uk-inline uk-width-1-1">
                     <span class="uk-form-icon" uk-icon="icon: mail"></span>
-                    <input name="email" placeholder="Email" class="formControl uk-input uk-form-large" type="text" #userEmail  required>
+                    <input [(ngModel)]="userEmail" name="email" placeholder="Email" class="formControl uk-input uk-form-large" type="text" required>
                   </div>
                 </div>
                 <div class="uk-margin">
                   <div class="uk-inline uk-width-1-1">
                     <span class="uk-form-icon" uk-icon="icon: lock"></span>
-                    <input name="password" placeholder="Password" class="formControl uk-input uk-form-large" type="password" #userPwd  required>
+                    <input [(ngModel)]="userPassword" name="password" placeholder="Password" class="formControl uk-input uk-form-large" type="password" required>
                   </div>
                 </div>
                 <div class="uk-margin">
-                  <button (click)="authService.SignUp(userEmail.value, userPwd.value)" class="uk-button uk-button-primary uk-button-large uk-width-1-1">Create Account</button>
+                  <h4 class="uk-text-center">Your Organization</h4>
+                  <select [(ngModel)]="selectedOrganization" name="organization" class="uk-select" >
+                      <option *ngFor="let organization of organizations">{{organization.orgName}}</option>                     
+                  </select>
+              </div>
+                <div class="uk-margin">
+                  <button [disabled]="!userEmail || !userPassword || !selectedOrganization" (click)="verifyOrganization()" class="uk-button uk-button-primary uk-button-large uk-width-1-1">Create Account</button>
                 </div>
                 <div class="uk-text-small uk-text-center">
                   Back to <a routerLink="/login" href="#">Login</a>

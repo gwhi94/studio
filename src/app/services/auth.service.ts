@@ -41,7 +41,11 @@ export class AuthService {
       .then((result) => {
         console.log("Logged in");
         this.ngZone.run(() => {
-          this.router.navigate(['studio']);
+          let that = this;
+          setTimeout(function(){
+            that.router.navigate(['studio']);
+
+          }, 1000)
         });
         this.SetUserData(result.user);
       }).catch((error) => {
@@ -81,9 +85,8 @@ export class AuthService {
     })
   }
 
-  // Returns true when user is looged in and email is verified
+  // Returns true when user is logged in and email is verified
   get isLoggedIn(): boolean {
-    console.log("hit");
     const user = JSON.parse(localStorage.getItem('user'));
     return (user !== null && user.emailVerified !== false) ? true : false;
   }

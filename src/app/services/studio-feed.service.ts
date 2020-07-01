@@ -19,4 +19,8 @@ export class StudioFeedService {
       postTitle:newPost.postTitle    
     });
   }
+
+  getOrganizations(){
+    return this.db.collection('organizations').snapshotChanges();
+  }
 }

@@ -12,6 +12,7 @@ import { AuthGuard } from './guard/auth.guard';
 const routes: Routes = [
   {path:'studio', component:StudioFeedComponent, canActivate:[AuthGuard]},
   {path:'login', component:LoginComponent},
+  {path:'', component:LoginComponent},
   {path:'register', component:RegisterComponent},
   {path:'verify', component:VerifyEmailComponent},
   {path:'forgot-my-password', component:ForgotPasswordComponent},
