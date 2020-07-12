@@ -2,10 +2,98 @@
 @import "../node_modules/uikit/src/scss/mixins-theme.scss";
 @import "../node_modules/uikit/src/scss/uikit-theme.scss";
 
-body{
+body:not(mat-icon){
     background-color:#eeeeee;
+    font-family: 'Poppins', sans-serif !important;
+}
+
+*:not(mat-icon){
+  font-family: 'Poppins', sans-serif !important;
 }
 
 .uk-card {
     border-radius: 10px;
 }
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+snack-bar-container {
+    &.error {
+      background-color: #b90005;
+      color:white;
+
+    }
+   
+    &.success {
+      background-color: #66bb6a;
+      color:white;
+    }
+  }
+  .app-alert {
+    min-width:100vw !important;
+    margin:0 !important;
+    border-radius:0 !important;
+    display:flex !important;
+    justify-content:center !important;
+
+}
+
+
+.tag-team-list {
+  padding:10px !important;
+  border-radius: 10px;
+  padding-top:0px !important;padding-right: 20px !important;
+}
+
+
+.mat-form-field-underline { 
+    display: none !important;
+  }
+
+
+.app-input {
+  background-color: #eceff1 !important;
+  border-radius:10px;
+  padding: 12px !important;
+  padding-left: 16px !important;
+
+}
+
+
+mat-form-field.mat-form-field-hide-placeholder .mat-input-element::placeholder{
+  color:#9d9b9a !important;
+  -webkit-text-fill-color: #9d9b9a !important;
+}
+
+mat-form-field.mat-form-field-hide-placeholder .mat-form-field-label-wrapper{
+  display: none;
+}
+
+
+.dropzone { 
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column; 
+  min-width: 80vw;
+  font-weight: 200;
+  height: 300px;
+  border: 2px dashed #f16624;
+  border-radius: 5px;
+  background: white;
+  margin: 10px 0;
+
+  &.hovering {
+      border: 2px solid #f16624;
+      color: #dadada !important;
+  }
+
+  .file-label {
+      font-size: 1.2em;
+  }
+}
+
+progress::-webkit-progress-value {
+  transition: width 0.1s ease;
+}
+

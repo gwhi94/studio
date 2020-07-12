@@ -9,7 +9,9 @@ import { VerifyEmailComponent } from './admin/verify-email/verify-email.componen
 import { AuthGuard } from './guard/auth.guard';
 
 
+
 const routes: Routes = [
+  
   {path:'studio', component:StudioFeedComponent, canActivate:[AuthGuard]},
   {path:'login', component:LoginComponent},
   {path:'', component:LoginComponent},

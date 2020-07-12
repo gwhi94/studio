@@ -19,6 +19,13 @@ import { RegisterComponent } from './admin/register/register.component';
 import { VerifyEmailComponent } from './admin/verify-email/verify-email.component';
 import { ForgotPasswordComponent } from './admin/forgot-password/forgot-password.component';
 import { FormsModule } from '@angular/forms';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+
+import { MatSnackBarModule } from '@angular/material';
+import { DropzoneDirective } from './dropzone.directive';
+import { UploaderComponent } from './uploader/uploader.component';
+import { UploadTaskComponent } from './upload-task/upload-task.component';
+
 
 
 @NgModule({
@@ -28,7 +35,10 @@ import { FormsModule } from '@angular/forms';
     LoginComponent,
     RegisterComponent,
     VerifyEmailComponent,
-    ForgotPasswordComponent
+    ForgotPasswordComponent,
+    //DropzoneDirective,
+    //UploaderComponent,
+    //UploadTaskComponent
   ],
   imports: [
     BrowserModule,
@@ -38,7 +48,10 @@ import { FormsModule } from '@angular/forms';
     StudioFeedModule,
     AngularFireAuthModule,
     FormsModule,
-    CommonModule
+    CommonModule,
+    BrowserAnimationsModule,
+    MatSnackBarModule,
+    
   ],
   providers: [AuthService],
   bootstrap: [AppComponent]

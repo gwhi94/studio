@@ -31,7 +31,7 @@ export class UpdateComponent implements OnInit {
   
     this.newPost.postTitle = this.newPostTitle;
 
-    this.studioFeedService.postUpdate(this.newPost);
+   // this.studioFeedService.postUpdate(this.newPost);
 
     
   }

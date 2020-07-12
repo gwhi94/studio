@@ -10,17 +10,35 @@ export class StudioFeedService {
 
   constructor(private db:AngularFirestore) { }
 
-  getFeed(){
-    return this.db.collection('studio-feed').snapshotChanges();
+  getFeed(orgId){
+    console.log(orgId);
+    return this.db.collection('studio-feed', (ref) => ref.where('orgId', '==', orgId)).snapshotChanges();
   }
 
-  postUpdate(newPost){ 
+  postUpdate(newPost, orgId){ 
     return this.db.collection('studio-feed').add({
-      postTitle:newPost.postTitle    
+      postTitle:newPost.postTitle,
+      postContent:newPost.description,
+      orgId:orgId  
     });
   }
 
   getOrganizations(){
     return this.db.collection('organizations').snapshotChanges();
   }
+
+  getUser(){
+    let user = JSON.parse(localStorage.getItem('user'));
+    console.log(user);
+    let uid = user['uid'];
+    console.log(uid);
+    return this.db.collection('users').doc(uid).snapshotChanges();
+  }
+
+  getOrg(orgId){
+    console.log("hit");
+    console.log(orgId);
+    return this.db.collection('organizations').doc(orgId).snapshotChanges();
+  }
+
 }

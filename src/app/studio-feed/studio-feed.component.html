@@ -1,16 +1,59 @@
-<div class="uk-card uk-card-default uk-card-update uk-card-body uk-width-1-2@m">
+<div class="uk-card uk-card-default uk-card-update uk-card-body uk-width-1-1@s">
     <h3 class="uk-card-title">Working on something new ?</h3>
-    <p>Let the rest of your team know what your currently working on...</p>
+    <p>Let the rest of your Team know what your currently working on...</p>
 
     <form>
         <fieldset class="uk-fieldset">    
             <div class="uk-margin">
-                <input name="newPostTitle" [(ngModel)]="newPostTitle" class="uk-input" type="text" placeholder="Brief title...">
+                <input name="newPostTitle" [(ngModel)]="newPost.postTitle" class="uk-input app-input" type="text" placeholder="Brief title...">
             </div> 
             <div class="uk-margin">
-                <textarea class="uk-textarea" rows="3" placeholder="Description..."></textarea>
+                <textarea name="newPostDescription" class="uk-textarea app-input" [(ngModel)]="newPost.description" rows="3" placeholder="Description..."></textarea>
             </div>                                  
         </fieldset>
+
+        <ul uk-accordion>
+            <li>
+                <a class="uk-accordion-title" href="#"><span class="uk-margin-small-right" uk-icon="plus-circle"></span>Tag Team Members</a>
+                <div class="uk-accordion-content"> 
+                    <mat-form-field class="tag-team-list uk-width-1-2@m uk-margin">
+                    <mat-chip-list #chipList aria-label="Tag Team members">
+                      <mat-chip
+                        *ngFor="let taggedOrgMember of taggedOrgMembers"
+                        [selectable]="selectable"
+                        [removable]="removable"
+                        (removed)="remove(taggedOrgMember)">
+                        {{taggedOrgMember}}
+                        <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+                      </mat-chip>
+                      <input class="app-input"
+                        #memberInput 
+                        matInputAutofocus  
+                        placeholder="Type to add Team Members"     
+                        [formControl]="memberCtrl"
+                        [matAutocomplete]="auto"
+                        [matChipInputFor]="chipList"
+                        [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                        (matChipInputTokenEnd)="add($event)">
+                    </mat-chip-list>
+                    <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
+                      <mat-option *ngFor="let member of filteredOrgMembers | async" [value]="member">
+                        {{member}}
+                      </mat-option>
+                    </mat-autocomplete>
+                    </mat-form-field>
+                </div> 
+            </li>
+        </ul> 
+
+        <ul uk-accordion>
+            <li>
+                <a class="uk-accordion-title" href="#"><span class="uk-margin-small-right" uk-icon="plus-circle"></span>Add an Image</a>
+                <div class="uk-accordion-content">                    
+                    <uploader></uploader>                                             
+                </div>
+            </li>
+        </ul>
     </form>
     <button (click)="postUpdate()" class="uk-button uk-button-primary">Post</button>
 </div>

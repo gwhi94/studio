@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../../services/auth.service';
 import { StudioFeedService } from 'src/app/services/studio-feed.service';
+import { ErrorService } from 'src/app/services/error.service';
 
 @Component({
   selector: 'app-register',
@@ -11,12 +12,17 @@ export class RegisterComponent implements OnInit {
 
   organizations = [];
   selectedOrganization:string;
+  selectedOrganizationId:string;
   userEmail:string;
   userPassword:string;
 
-  constructor(private authService: AuthService, private studioFeedService:StudioFeedService) { }
+  constructor(private authService: AuthService, private studioFeedService:StudioFeedService, private errorService:ErrorService) { }
 
   ngOnInit() {
+    
+    console.log(this.userEmail, this.userPassword, this.selectedOrganization);
+    
+    
     this.studioFeedService.getOrganizations()
       .subscribe(res => {
         console.log(res[0].payload.doc.data());
@@ -27,23 +33,23 @@ export class RegisterComponent implements OnInit {
       })
   }
 
+  updateForms(){
+    console.log(this.userPassword, this.userEmail, this.selectedOrganization);
+  }
+
   register(){
-    this.authService.SignUp(this.userEmail, this.userPassword)
+    this.authService.SignUp(this.userEmail, this.userPassword, this.selectedOrganizationId)
   }
 
   verifyOrganization(){
-    console.log(this.selectedOrganization, this.organizations, this.userEmail, this.userPassword);
-
     let organization = this.organizations.find(obj => obj.orgName == this.selectedOrganization);
+    this.selectedOrganizationId = organization.orgId;
 
-    console.log(organization);
-
+    console.log(this.selectedOrganizationId);
     if(organization.orgMembers.find(obj => obj.memberEmail == this.userEmail)){
       this.register();
     }else{
-      console.log("User not in org members");
+      this.errorService.showError("Email address not associated with selected organization");
     }
-    
   }
-
 }

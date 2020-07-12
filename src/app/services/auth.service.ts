@@ -1,14 +1,15 @@
 import { Injectable, NgZone  } from '@angular/core';
 import { Router } from '@angular/router';
-
 import { auth } from 'firebase/app';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { AngularFirestore, AngularFirestoreDocument } from '@angular/fire/firestore';
-
 import { Observable, of } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
-
 import { User } from '../models/user';
+import { ErrorService } from './error.service';
+import { DataService } from './data.service';
+
+
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -18,12 +19,15 @@ export class AuthService {
     public afs: AngularFirestore,   // Inject Firestore service
     public afAuth: AngularFireAuth, // Inject Firebase auth service
     public router: Router,  
-    public ngZone: NgZone // NgZone service to remove outside scope warning
+    public ngZone: NgZone, // NgZone service to remove outside scope warning
+    private errorService:ErrorService,
+    private dataService: DataService
   ) {    
     /* Saving user data in localstorage when 
     logged in and setting up null when logged out */
     this.afAuth.authState.subscribe(user => {
       if (user) {
+        console.log("yep");
         this.userData = user;
         localStorage.setItem('user', JSON.stringify(this.userData));
         JSON.parse(localStorage.getItem('user'));
@@ -49,20 +53,22 @@ export class AuthService {
         });
         this.SetUserData(result.user);
       }).catch((error) => {
-        window.alert(error.message)
+        this.errorService.showError(error.message);
       })
   }
 
   // Sign up with email/password
-  SignUp(email, password) {
+  SignUp(email, password, orgId) {
     return this.afAuth.auth.createUserWithEmailAndPassword(email, password)
       .then((result) => {
         /* Call the SendVerificaitonMail() function when new user sign 
         up and returns promise */
         this.SendVerificationMail();
+        
+        result.user['orgId'] = orgId;
         this.SetUserData(result.user);
       }).catch((error) => {
-        window.alert(error.message)
+        this.errorService.showError(error.message);
       })
   }
 
@@ -79,9 +85,9 @@ export class AuthService {
     console.log(passwordResetEmail);
     return this.afAuth.auth.sendPasswordResetEmail(passwordResetEmail)
     .then(() => {
-      window.alert('Password reset email sent, check your inbox.');
+      this.errorService.showSuccess('Password reset email sent, check your inbox.');
     }).catch((error) => {
-      window.alert(error)
+      this.errorService.showError(error);
     })
   }
 
@@ -115,7 +121,9 @@ export class AuthService {
       email: user.email,
       displayName: user.displayName,
       photoURL: user.photoURL,
-      emailVerified: user.emailVerified
+      emailVerified: user.emailVerified,
+      admin:false,
+      orgId:user.orgId
     }
     return userRef.set(userData, {
       merge: true
@@ -128,6 +136,10 @@ export class AuthService {
       localStorage.removeItem('user');
       this.router.navigate(['login']);
     })
+  }
+
+  returnCurrentUser(){
+    console.log(this.afAuth.auth.currentUser);
   }
 
 }
