@@ -11,6 +11,7 @@ import { Post } from '../models/post';
 import { AuthService } from '../services/auth.service';
 import { DataService } from '../services/data.service';
 import { ActivatedRoute } from '@angular/router';
+import { UploadGateService } from '../services/upload-gate.service';
 
 @Component({
   selector: 'app-studio-feed',
@@ -45,6 +46,7 @@ export class StudioFeedComponent implements OnInit {
     private studioFeedService:StudioFeedService,
     private authService:AuthService,
     private dataService:DataService,
+    private uploadGateService:UploadGateService
     )
   
     
@@ -137,7 +139,10 @@ export class StudioFeedComponent implements OnInit {
   postUpdate(){
     //TODO:This is undefined
     console.log(this.newPost); 
-    this.studioFeedService.postUpdate(this.newPost, this.org['orgId']);  
+    //this.studioFeedService.postUpdate(this.newPost, this.org['orgId']);  
+
+
+    this.uploadGateService.sendUploads();
   }
 
   onFileSelected(event){

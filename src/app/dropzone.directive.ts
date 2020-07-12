@@ -11,6 +11,7 @@ export class DropzoneDirective {
   @HostListener('drop', ['$event'])
   onDrop($event) {
     $event.preventDefault();
+    console.log("op", $event.dataTransfer.files);
     this.dropped.emit($event.dataTransfer.files);
     this.hovered.emit(false);
   }
