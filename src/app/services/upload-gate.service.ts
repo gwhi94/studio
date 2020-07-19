@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { AngularFireStorage, AngularFireUploadTask } from '@angular/fire/storage';
 import { AngularFirestore } from '@angular/fire/firestore';
-import { Observable } from 'rxjs';
-import { finalize, tap } from 'rxjs/operators';
+import { Observable, of, Subject } from 'rxjs';
+import { finalize, tap, filter, switchMap } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -10,50 +10,43 @@ import { finalize, tap } from 'rxjs/operators';
 export class UploadGateService {
 
   gatedUploads:Array<any> = [];
-  task: AngularFireUploadTask;
-  snapshot: Observable<any>;
-  downloadURL: string;
+  task:AngularFireUploadTask;
+  downloadURL:Observable<string>;
+  url:string;
+  
 
   constructor(private storage: AngularFireStorage, private db: AngularFirestore) { }
 
   holdUpload(file){
-    this.gatedUploads.push(file);
-    console.log(this.gatedUploads);
+
+    if(this.gatedUploads.length == 0){
+      this.gatedUploads.push(file);
+    }
+  }
+
+  clearUpload(){
+    this.gatedUploads.length = 0;
   }
 
   sendUploads(){
-    this.gatedUploads.forEach(file => {
-      this.startUpload(file)    
-    });
-  }
-
-  startUpload(file) {
-
-    // The storage path
+    console.log("HIT");
+    const file = this.gatedUploads[0];
     const path = `studioBucket/${Date.now()}_${file.name}`;
-
     // Reference to storage bucket
     const ref = this.storage.ref(path);
-
     // The main task
     this.task = this.storage.upload(path, file);
 
-    this.snapshot = this.task.snapshotChanges().pipe(
-      tap(console.log),
-      // The file's download URL
-      finalize( async() =>  {
+    var subject = new Subject<string>();
 
-        
-        this.downloadURL = await ref.getDownloadURL().toPromise();
-
-        console.log(this.downloadURL, path);
-
-        //here we need to take a ref of the download URL and pass it back to the studio comp
-        //for posting update
-      
-
-        this.db.collection('files').add( { downloadURL: this.downloadURL, path });
-      }),
-    );
-  } 
+     this.task.snapshotChanges().pipe(
+      finalize(() => {
+        this.downloadURL = ref.getDownloadURL()
+        this.downloadURL.subscribe(url => {
+          subject.next(url);                      
+        })
+      })
+      ).subscribe()   
+      return subject.asObservable();   
+  }
 }

@@ -1,7 +1,8 @@
+  <div class="uploaded-image-container"> 
+    <div *ngIf="url">
 
-  
-  <div *ngIf="snapshot | async as snap"> 
-    <div *ngIf="downloadURL as url">
-      <img [src]="url"><br>
+      <div class="delete-overlay">
+        <img [src]="url"><br>
+      </div>
     </div> 
   </div>

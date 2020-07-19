@@ -10,8 +10,9 @@ import { StudioFeedService } from '../services/studio-feed.service';
 import { Post } from '../models/post';
 import { AuthService } from '../services/auth.service';
 import { DataService } from '../services/data.service';
-import { ActivatedRoute } from '@angular/router';
 import { UploadGateService } from '../services/upload-gate.service';
+import { isNgTemplate } from '@angular/compiler';
+import { isFakeMousedownFromScreenReader } from '@angular/cdk/a11y';
 
 @Component({
   selector: 'app-studio-feed',
@@ -30,6 +31,10 @@ export class StudioFeedComponent implements OnInit {
   posts:Array<any> = [];
   orgMembers:Array<any> = [];
   uid:string;
+
+  user:Object;
+
+  orgMemberComplete = [];
 
   org = {};
 
@@ -57,7 +62,10 @@ export class StudioFeedComponent implements OnInit {
 
       this.newPost = {
         postTitle:"",
-        description:""
+        description:"",
+        imageUrl:"",
+        teamMembers:[],
+        user:{}
       };
    }
 
@@ -105,9 +113,21 @@ export class StudioFeedComponent implements OnInit {
     this.studioFeedService.getUser()
       .subscribe(res => {
         let userDecoded = res.payload.data();
+        this.user = userDecoded;
+
         this.getOrgDetails(userDecoded['orgId']);
       })
     
+  }
+
+  resetNewPostFields(){
+    this.newPost = {
+      postTitle:"",
+      description:"",
+      imageUrl:"",
+      teamMembers:[],
+      user:{}
+    };
   }
 
   getOrgDetails(orgId){
@@ -120,7 +140,8 @@ export class StudioFeedComponent implements OnInit {
         this.getFeed(this.org['orgId']);
         console.log(this.org);
         orgDecoded['orgMembers'].forEach(element => {
-          this.orgMembers.push(element.memberDisplayName);        
+          this.orgMembers.push(element.memberDisplayName);  
+          this.orgMemberComplete.push(element);      
         });
         console.log("blach",this.orgMembers);
       })
@@ -133,20 +154,50 @@ export class StudioFeedComponent implements OnInit {
         for(let i = 0; i < res.length;i++){
           this.posts.push(res[i].payload.doc.data());
         }
+        console.log(this.posts);
       })
   }
 
   postUpdate(){
-    //TODO:This is undefined
-    console.log(this.newPost); 
-    //this.studioFeedService.postUpdate(this.newPost, this.org['orgId']);  
 
 
-    this.uploadGateService.sendUploads();
+    this.newPost.user = this.user;
+
+    if(this.taggedOrgMembers.length > 0){
+      this.taggedOrgMembers.forEach(item => {
+
+        var foundMember = this.orgMemberComplete.filter(obj => {
+          return obj.memberDisplayName == item;
+          
+        });
+
+        if(foundMember.length > 0){
+          foundMember.forEach(member => {
+            this.newPost.teamMembers.push(member);
+          })
+        }else{
+          //not actual team members tagged
+          this.newPost.teamMembers.push(item);
+        }
+
+      })
+
+    }
+     
+    if(this.uploadGateService.gatedUploads.length > 0){
+      this.uploadGateService.sendUploads()
+        .subscribe(res =>{
+          console.log(res);
+          this.newPost.imageUrl = res;
+          console.log(this.newPost); 
+          this.studioFeedService.postUpdate(this.newPost, this.org['orgId']); 
+          this.resetNewPostFields();
+          //url
+        })    
+    }else{
+       this.studioFeedService.postUpdate(this.newPost, this.org['orgId']); 
+       this.resetNewPostFields();
+    }   
   }
 
-  onFileSelected(event){
-    console.log(event);
-
-  }
 }

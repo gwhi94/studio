@@ -1,13 +1,14 @@
-<div class="dropzone" 
+<div *ngIf="files.length == 0" class="dropzone" 
      dropzone
      (hovered)="toggleHover($event)"
      (dropped)="onDrop($event)"
      [class.hovering]="isHovering">
 
-     <h3>AngularFire Drop Zone</h3>
-     <p>Drag and Drop a File</p>
+     <h3>Drop an Image</h3>
+    
 </div>
 
 <div *ngFor="let file of files">
   <upload-task [file]="file"></upload-task>
+  <button (click)="clearUpload()" class="uk-button uk-button-danger uk-width-1-1">Remove Image</button>
 </div>

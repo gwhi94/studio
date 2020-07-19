@@ -14,6 +14,7 @@ export class UploadTaskComponent implements OnInit {
 
   @Input() file: File;
 
+  url;
 
   constructor(private storage: AngularFireStorage, private db: AngularFirestore, private uploadGateService:UploadGateService) { }
 
@@ -21,18 +22,29 @@ export class UploadTaskComponent implements OnInit {
     console.log(this.file);
     //this.startUpload();
 
+    var read = new FileReader();
+    //read.readAsBinaryString(this.file);
+    read.readAsDataURL(this.file);
+    var that = this;
+    read.onloadend = function(){
+      console.log("dd", read.result);
+      that.url = read.result;
+
+    }
+
     this.storeUpload();
   }
 
   storeUpload(){
-
     this.uploadGateService.holdUpload(this.file);
-
   }
-
 
   isActive(snapshot) {
     return snapshot.state === 'running' && snapshot.bytesTransferred < snapshot.totalBytes;
+  }
+
+  deleteImage(){
+
   }
 
 }

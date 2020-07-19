@@ -59,10 +59,20 @@
 </div>
 
 
-<div class="feed-container" *ngFor="let post of posts"> 
-    <div class="uk-card uk-card-default uk-card-post uk-margin-top uk-card-body uk-width-1-2@m">
+<div class="feed-container" > 
+    <div class="uk-card uk-card-default uk-card-post uk-margin-top uk-card-body uk-width-1-2@m" *ngFor="let post of posts">
+        <h2 class="uk-card-title">{{post.user.displayName}}</h2>
         <h3 class="uk-card-title">{{post.postTitle}}</h3>
+        <div *ngIf="post.imageUrl">
+            <img src="{{post.imageUrl}}">
+        </div>
         <p>{{post.postContent}}</p>
+
+        <div class="post-members">
+            <mat-chip-list >
+                <mat-chip *ngFor="let teamMember of post.teamMembers" ><span *ngIf="teamMember.memberDisplayName">{{teamMember.memberDisplayName}}</span><span *ngIf="!teamMember.memberDisplayName">{{teamMember}}</span></mat-chip>
+              </mat-chip-list>
+        </div>
     </div>
 </div>
 
