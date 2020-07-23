@@ -12,7 +12,7 @@
             </div>                                  
         </fieldset>
 
-        <ul uk-accordion>
+        <ul uk-accordion id="accordion-team">
             <li>
                 <a class="uk-accordion-title" href="#"><span class="uk-margin-small-right" uk-icon="plus-circle"></span>Tag Team Members</a>
                 <div class="uk-accordion-content"> 
@@ -46,11 +46,11 @@
             </li>
         </ul> 
 
-        <ul uk-accordion>
+        <ul uk-accordion id="accordion-image">
             <li>
                 <a class="uk-accordion-title" href="#"><span class="uk-margin-small-right" uk-icon="plus-circle"></span>Add an Image</a>
                 <div class="uk-accordion-content">                    
-                    <uploader></uploader>                                             
+                    <uploader #child ></uploader>                                             
                 </div>
             </li>
         </ul>
@@ -61,8 +61,12 @@
 
 <div class="feed-container" > 
     <div class="uk-card uk-card-default uk-card-post uk-margin-top uk-card-body uk-width-1-2@m" *ngFor="let post of posts">
-        <h2 class="uk-card-title">{{post.user.displayName}}</h2>
-        <h3 class="uk-card-title">{{post.postTitle}}</h3>
+        
+      
+        <h2 class="uk-card-title uk-margin-small">{{post.user.displayName}}</h2>
+        <hr>
+  
+        <h3 class="uk-card-title uk-margin-small">{{post.postTitle}}</h3>
         <div *ngIf="post.imageUrl">
             <img src="{{post.imageUrl}}">
         </div>
@@ -72,6 +76,37 @@
             <mat-chip-list >
                 <mat-chip *ngFor="let teamMember of post.teamMembers" ><span *ngIf="teamMember.memberDisplayName">{{teamMember.memberDisplayName}}</span><span *ngIf="!teamMember.memberDisplayName">{{teamMember}}</span></mat-chip>
               </mat-chip-list>
+        </div>
+
+        <hr>
+
+        <div class="interaction-panel uk-margin">
+                             
+            <div class="uk-child-width-expand@s" uk-grid>
+                <div>                   
+                    <ul uk-accordion>
+                        <li class="uk-closed">
+                            <a class="uk-accordion-title" href="#"><span class="uk-margin-right uk-text-left" uk-icon="icon:comments; ratio:1.5"></span></a>
+                            <div class="uk-accordion-content">
+                                <app-comments (postEvent)="getComments($event)" [post]="post"></app-comments>
+                            </div>
+                        </li>                       
+                    </ul>
+                </div>
+                <div class="uk-text-right">
+                    <div>                   
+                        <span class="uk-margin-right" uk-icon="icon:happy; ratio:1.5"></span>
+                        <ul uk-accordion>
+                            <li class="uk-closed">
+                                <a class="uk-accordion-title" href="#"><span class="uk-margin-right uk-text-left" uk-icon="icon:chevron-down; ratio:1.5"></span></a>
+                                <div class="uk-accordion-content">
+                                    <p>People who liked it</p>
+                                </div>
+                            </li>                       
+                        </ul>
+                    </div>
+                </div>                    
+             </div>                  
         </div>
     </div>
 </div>

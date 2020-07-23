@@ -1,7 +1,12 @@
+declare var require: any
 import { Injectable } from '@angular/core';
 import { Observable, of, Subject, BehaviorSubject } from 'rxjs';
 import { AngularFirestore, AngularFirestoreCollection, AngularFirestoreDocument } from 'angularfire2/firestore'; 
+import { firestore } from 'firebase';
 //import * as moment from 'moment';
+import * as firebase from 'firebase';
+import { CommentsModule } from '../comments/comments.module';
+
 
 @Injectable({
   providedIn: 'root'
@@ -11,11 +16,11 @@ export class StudioFeedService {
   constructor(private db:AngularFirestore) { }
 
   getFeed(orgId){
-    return this.db.collection('studio-feed', (ref) => ref.where('orgId', '==', orgId)).snapshotChanges();
+    return this.db.collection('studio-feed', (ref) => ref.where('orgId', '==', orgId)).valueChanges({idField:'id'});
   }
 
   postUpdate(newPost, orgId){ 
-    console.log(newPost);
+    // firebase.firestore.FieldValue.serverTimestamp()
     return this.db.collection('studio-feed').add({
       postTitle:newPost.postTitle,
       postContent:newPost.description,
@@ -23,7 +28,12 @@ export class StudioFeedService {
       teamMembers:newPost.teamMembers,
       orgId:orgId ,
       user:newPost.user, 
-    });
+      comments:[],
+      entryCreatedOn:Date.now()
+    })
+      .then(function(){
+        return true;
+      })
   }
 
   getOrganizations(){
@@ -38,6 +48,27 @@ export class StudioFeedService {
 
   getOrg(orgId){
     return this.db.collection('organizations').doc(orgId).snapshotChanges();
+  }
+
+  addComment(postId, author, comment){
+    let commentObject = {
+      author:author,
+      comment:comment,
+      entryCreatedOn:Date.now()
+    }
+    console.log(postId, author, comment);
+    const documentToUpdate = this.db.collection('studio-feed').doc(postId);
+    return documentToUpdate.update({
+      comments:firestore.FieldValue.arrayUnion(commentObject)
+    })
+    .then(function(){
+      return true;
+    })
+  }
+
+  getComments(postId){
+    return this.db.collection('studio-feed').doc(postId).valueChanges();
+
   }
 
 }

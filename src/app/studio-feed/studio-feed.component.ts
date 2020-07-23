@@ -2,7 +2,7 @@ import { Component, OnInit,  ElementRef, ViewChild } from '@angular/core';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { MatAutocompleteSelectedEvent, MatAutocomplete } from '@angular/material/autocomplete';
 import { MatChipInputEvent } from '@angular/material/chips';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import { FormControl } from '@angular/forms';
 import { StudioFeedService } from '../services/studio-feed.service';
@@ -13,6 +13,9 @@ import { DataService } from '../services/data.service';
 import { UploadGateService } from '../services/upload-gate.service';
 import { isNgTemplate } from '@angular/compiler';
 import { isFakeMousedownFromScreenReader } from '@angular/cdk/a11y';
+import { UploaderComponent } from '../uploader/uploader.component';
+
+declare var UIkit: any;
 
 @Component({
   selector: 'app-studio-feed',
@@ -38,6 +41,10 @@ export class StudioFeedComponent implements OnInit {
 
   org = {};
 
+  orgId:string;
+
+  feedSub$: Subscription;
+
   newPostTitle:string;
   newPostDescription:string;
   newPostTaggedMembers:Array<string>;
@@ -45,6 +52,8 @@ export class StudioFeedComponent implements OnInit {
 
   @ViewChild('memberInput',{static: false}) memberInput: ElementRef<HTMLInputElement>;
   @ViewChild('auto',{static: false}) matAutocomplete: MatAutocomplete;
+
+  @ViewChild('child',  { static: false }) child:UploaderComponent;
 
  
   constructor(
@@ -104,17 +113,16 @@ export class StudioFeedComponent implements OnInit {
 
   private _filter(value: string): string[] {
     const filterValue = value.toLowerCase();
-
     return this.orgMembers.filter(member => member.toLowerCase().indexOf(filterValue) === 0);
   }
 
   ngOnInit() {
-    console.log(this.newPost);
+    console.log("hit oninit");
     this.studioFeedService.getUser()
       .subscribe(res => {
         let userDecoded = res.payload.data();
         this.user = userDecoded;
-
+        this.orgId = userDecoded['orgId'];
         this.getOrgDetails(userDecoded['orgId']);
       })
     
@@ -128,38 +136,53 @@ export class StudioFeedComponent implements OnInit {
       teamMembers:[],
       user:{}
     };
+
+    this.taggedOrgMembers.length = 0;
+    
+    this.child.clearUpload();
+    UIkit.accordion("#accordion-team").toggle();
+    UIkit.accordion("#accordion-image").toggle();
   }
 
   getOrgDetails(orgId){
-    console.log("hit this");
     this.studioFeedService.getOrg(orgId)
       .subscribe(res => {
         let orgDecoded = res.payload.data();
-        console.log(orgDecoded);
         this.org = orgDecoded;
         this.getFeed(this.org['orgId']);
-        console.log(this.org);
         orgDecoded['orgMembers'].forEach(element => {
           this.orgMembers.push(element.memberDisplayName);  
           this.orgMemberComplete.push(element);      
         });
-        console.log("blach",this.orgMembers);
       })
   }
 
   getFeed(orgId){
-    this.studioFeedService.getFeed(orgId)
+    this.feedSub$ = this.studioFeedService.getFeed(orgId)
       .subscribe(res => {
+        console.log(res);
         this.posts.length = 0;
+        console.log(res);
         for(let i = 0; i < res.length;i++){
-          this.posts.push(res[i].payload.doc.data());
+          console.log(res[i]);
+          this.posts.push(res[i]);
         }
-        console.log(this.posts);
+        this.feedSub$.unsubscribe();
       })
   }
 
-  postUpdate(){
+  getComments(postId){
+    console.log("Get Comments", postId);
 
+    this.studioFeedService.getComments(postId)
+      .subscribe(res => {      
+        let postToUpdate = this.posts.filter(obj => obj.id == postId);
+        postToUpdate[0]['comments'] = res['comments'];
+      })
+
+  }
+
+  postUpdate(){
 
     this.newPost.user = this.user;
 
@@ -179,7 +202,6 @@ export class StudioFeedComponent implements OnInit {
           //not actual team members tagged
           this.newPost.teamMembers.push(item);
         }
-
       })
 
     }
@@ -190,14 +212,20 @@ export class StudioFeedComponent implements OnInit {
           console.log(res);
           this.newPost.imageUrl = res;
           console.log(this.newPost); 
-          this.studioFeedService.postUpdate(this.newPost, this.org['orgId']); 
+          this.studioFeedService.postUpdate(this.newPost, this.org['orgId'])
+            .then(res =>{
+              console.log(res);
+            })
+            
           this.resetNewPostFields();
           //url
         })    
     }else{
-       this.studioFeedService.postUpdate(this.newPost, this.org['orgId']); 
+       this.studioFeedService.postUpdate(this.newPost, this.org['orgId'])
+        .then(res => {
+          this.getFeed(this.orgId);
+        })
        this.resetNewPostFields();
     }   
   }
-
 }

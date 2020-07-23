@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { UploadGateService } from '../services/upload-gate.service';
 
 @Component({
@@ -7,6 +7,7 @@ import { UploadGateService } from '../services/upload-gate.service';
   styleUrls: ['./uploader.component.scss']
 })
 export class UploaderComponent {
+
 
   constructor(private uploadGateService:UploadGateService){}
 

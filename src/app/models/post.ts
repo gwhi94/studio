@@ -3,5 +3,6 @@ export class Post {
     description:string;
     imageUrl:string;
     teamMembers:Array<any>;
+    user:Object;
     
 }

@@ -10,6 +10,9 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { UploaderComponent } from '../uploader/uploader.component';
 import { DropzoneDirective } from '../dropzone.directive';
 import { UploadTaskComponent } from '../upload-task/upload-task.component';
+import { CommentsComponent } from '../comments/comments.component';
+
+
 
 
 @NgModule({
@@ -17,7 +20,8 @@ import { UploadTaskComponent } from '../upload-task/upload-task.component';
     StudioFeedComponent,
     UploaderComponent,
     DropzoneDirective,
-    UploadTaskComponent
+    UploadTaskComponent,
+    CommentsComponent
   ],
   imports: [
     CommonModule,

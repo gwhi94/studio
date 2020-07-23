@@ -5,6 +5,8 @@
 body:not(mat-icon){
     background-color:#eeeeee;
     font-family: 'Poppins', sans-serif !important;
+    display:table;
+    width:100%;
 }
 
 *:not(mat-icon){
@@ -95,5 +97,10 @@ mat-form-field.mat-form-field-hide-placeholder .mat-form-field-label-wrapper{
 
 progress::-webkit-progress-value {
   transition: width 0.1s ease;
+}
+
+
+.uk-accordion-title::before {
+  display:none !important;
 }
 
