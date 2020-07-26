@@ -31,8 +31,9 @@ export class CommentsComponent implements OnInit {
     if(this.newComment){
       var that = this;
       this.studioFeedService.addComment(this.post['id'], this.user, this.newComment)
-        .then(function(){
-          that.postEvent.emit(that.post['id']);
+      .then(function(){
+          that.newComment = "";
+          that.postEvent.emit(that.post['id']);       
         })
     }
     //(postId, author, comment

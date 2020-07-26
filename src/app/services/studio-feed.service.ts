@@ -16,7 +16,9 @@ export class StudioFeedService {
   constructor(private db:AngularFirestore) { }
 
   getFeed(orgId){
-    return this.db.collection('studio-feed', (ref) => ref.where('orgId', '==', orgId)).valueChanges({idField:'id'});
+    return this.db.collection('studio-feed', (ref) => ref.where('orgId', '==', orgId)
+      .orderBy("entryCreatedOn", "desc"))
+        .valueChanges({idField:'id'});
   }
 
   postUpdate(newPost, orgId){ 
@@ -29,6 +31,7 @@ export class StudioFeedService {
       orgId:orgId ,
       user:newPost.user, 
       comments:[],
+      likes:[],
       entryCreatedOn:Date.now()
     })
       .then(function(){
@@ -56,7 +59,6 @@ export class StudioFeedService {
       comment:comment,
       entryCreatedOn:Date.now()
     }
-    console.log(postId, author, comment);
     const documentToUpdate = this.db.collection('studio-feed').doc(postId);
     return documentToUpdate.update({
       comments:firestore.FieldValue.arrayUnion(commentObject)
@@ -69,6 +71,22 @@ export class StudioFeedService {
   getComments(postId){
     return this.db.collection('studio-feed').doc(postId).valueChanges();
 
+  }
+
+  likePost(postId, author){
+
+    let likeObject = {
+      author:author,
+      entryCreatedOn:Date.now()
+    }
+
+    const documentToUpdate = this.db.collection('studio-feed').doc(postId);
+    return documentToUpdate.update({
+      likes:firestore.FieldValue.arrayUnion(likeObject)
+    })
+    .then(function(){
+      return true
+    })
   }
 
 }

@@ -2,18 +2,20 @@
 <fieldset class="uk-fieldset">    
     <div class="uk-margin">
         <div class="uk-text-center uk-grid-column-collapse" uk-grid>
-            <div class="uk-width-3-5">
-                <input name="newPostTitle" [(ngModel)]="newComment" class="uk-input app-input" type="text" placeholder="Add a Comment...">
+            <div class="uk-width-4-5">
+                <input name="newPostTitle" [(ngModel)]="newComment" class="uk-input app-input comment-input" type="text" placeholder="Add a Comment...">
             </div>
-            <div class="uk-width-2-5">
-                <button (click)="addComment()" class="uk-button uk-button-primary"><span uk-icon="icon: comment"></span></button>
+            <div class="uk-width-1-5">
+                <button (click)="addComment()" class="uk-button uk-button-primary uk-width-1-1 comment-button"><span uk-icon="icon: comment"></span></button>
             </div>          
         </div>          
     </div>                              
 </fieldset>
 
-<div class="uk-width-1-1">
-    <div class="comment-bubble" *ngFor="let comment of post.comments">
-        <p>{{comment.comment}}</p>
+<div class="uk-width-1-1 comment-container">
+    <div class="uk-card comment-bubble uk-card-default uk-card-body uk-margin-bottom " *ngFor="let comment of post.comments">
+        <h3 class="comment-head">{{comment.author.displayName}}</h3>
+        <p class="comment-body">{{comment.comment}}</p>
+        <p class="comment-timestamp uk-text-right">- {{comment.entryCreatedOn | date:'medium'}}</p>
     </div>
 </div>

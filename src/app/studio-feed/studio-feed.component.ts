@@ -15,6 +15,7 @@ import { isNgTemplate } from '@angular/compiler';
 import { isFakeMousedownFromScreenReader } from '@angular/cdk/a11y';
 import { UploaderComponent } from '../uploader/uploader.component';
 
+
 declare var UIkit: any;
 
 @Component({
@@ -182,6 +183,29 @@ export class StudioFeedComponent implements OnInit {
 
   }
 
+  likePost(post){
+    console.log(post);
+
+    this.studioFeedService.likePost(post.id, this.user)
+      .then(function(){
+        console.log("liked post");
+      })
+
+  }
+
+  hasLiked(post){
+    
+    console.log(post.likes.length);
+     
+    for(let i = 0; i < post.likes.length;i++){
+       console.log(post.likes[i], this.user['uid']);
+       if(post.likes[i].author.uid == this.user['uid']){
+         console.log("has liked this");
+         return 'liked-post';
+       }
+     }
+  }
+
   postUpdate(){
 
     this.newPost.user = this.user;
@@ -214,7 +238,7 @@ export class StudioFeedComponent implements OnInit {
           console.log(this.newPost); 
           this.studioFeedService.postUpdate(this.newPost, this.org['orgId'])
             .then(res =>{
-              console.log(res);
+              this.getFeed(this.orgId);
             })
             
           this.resetNewPostFields();

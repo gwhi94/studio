@@ -1,0 +1,33 @@
+.comment-container{
+    height:400px;
+    overflow-y: scroll;
+    padding-right: 5px;
+}
+
+.comment-input{
+    border-radius: 10px 0px 0px 10px;
+}
+
+.comment-button{
+    border-radius: 0px 10px 10px 0px !important;
+}
+
+
+.comment-bubble {
+    background-color: #E3E5E8 !important;
+    padding:15px !important;
+    border-radius: 20px;
+
+    .comment-head{
+        font-size: 18px;
+        margin-bottom: 0;
+    }
+    .comment-body{
+        margin-top: 0 !important;
+        margin-bottom: 5px;
+    }
+    .comment-timestamp{
+        font-size: 12px;
+        margin-top: 0px;
+    }
+}
