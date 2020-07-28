@@ -97,7 +97,7 @@
                     <div>                   
                         <ul uk-accordion>
                             <li class="uk-closed">
-                                <span (click)="likePost(post)" [ngClass]="hasLiked(post)" class="like-icon" uk-icon="icon:happy; ratio:1.5"></span>
+                                <span (click)="likePost(post)" [ngClass]="{'liked-post' : post.likesRefDictionary.includes(user.uid)}" class="like-icon" uk-icon="icon:happy; ratio:1.5"></span>
                                 <a class="uk-accordion-title uk-display-inline" href="#"><span class="uk-margin-right uk-text-left" uk-icon="icon:chevron-down; ratio:1.5"></span></a>
                                 <div class="uk-accordion-content">
                                     <p *ngFor="let like of post.likes"><span class="uk-text-bold">{{like.author.displayName}}</span> liked this</p>

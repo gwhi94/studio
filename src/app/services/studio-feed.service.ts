@@ -6,7 +6,8 @@ import { firestore } from 'firebase';
 //import * as moment from 'moment';
 import * as firebase from 'firebase';
 import { CommentsModule } from '../comments/comments.module';
-
+import { CDK_CONNECTED_OVERLAY_SCROLL_STRATEGY_PROVIDER_FACTORY } from '@angular/cdk/overlay/typings/overlay-directives';
+import { map, catchError } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -32,6 +33,7 @@ export class StudioFeedService {
       user:newPost.user, 
       comments:[],
       likes:[],
+      likesRefDictionary:[],
       entryCreatedOn:Date.now()
     })
       .then(function(){
@@ -70,23 +72,48 @@ export class StudioFeedService {
 
   getComments(postId){
     return this.db.collection('studio-feed').doc(postId).valueChanges();
-
   }
 
-  likePost(postId, author){
+  getLikes(postId){
+    return this.db.collection('studio-feed').doc(postId).valueChanges();
+  }
 
+
+  likePost(postId, author){
+    console.log("ADDING LIKE");
     let likeObject = {
       author:author,
       entryCreatedOn:Date.now()
     }
-
+    var that = this;
     const documentToUpdate = this.db.collection('studio-feed').doc(postId);
+
     return documentToUpdate.update({
-      likes:firestore.FieldValue.arrayUnion(likeObject)
+      likes:firestore.FieldValue.arrayUnion(likeObject),
+      likesRefDictionary:firestore.FieldValue.arrayUnion(likeObject.author.uid)
     })
     .then(function(){
-      return true
+      that.getLikes(postId);
     })
+   
   }
 
+  removeLike(postId, authorId){
+    console.log("REMOVING LIKE");
+    const documentToUpdate = this.db.collection('studio-feed').doc(postId);
+    var oldLikesArray = [];
+
+    return documentToUpdate.snapshotChanges().pipe(map(res => {
+    
+      oldLikesArray = res.payload.data()['likes'];
+      oldLikesArray = oldLikesArray.filter(function(obj){
+        return obj.author.uid !== authorId
+      })
+      documentToUpdate.update({
+        likesRefDictionary:firestore.FieldValue.arrayRemove(authorId),
+        likes:oldLikesArray
+      })     
+    })
+   
+    )}
 }

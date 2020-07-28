@@ -95,7 +95,6 @@ export class StudioFeedComponent implements OnInit {
 
     this.memberCtrl.setValue(null);
 
-    console.log(this.taggedOrgMembers);
   }
 
   remove(member: string): void {
@@ -118,11 +117,11 @@ export class StudioFeedComponent implements OnInit {
   }
 
   ngOnInit() {
-    console.log("hit oninit");
     this.studioFeedService.getUser()
       .subscribe(res => {
         let userDecoded = res.payload.data();
         this.user = userDecoded;
+        console.log("USER", this.user);
         this.orgId = userDecoded['orgId'];
         this.getOrgDetails(userDecoded['orgId']);
       })
@@ -161,11 +160,8 @@ export class StudioFeedComponent implements OnInit {
   getFeed(orgId){
     this.feedSub$ = this.studioFeedService.getFeed(orgId)
       .subscribe(res => {
-        console.log(res);
         this.posts.length = 0;
-        console.log(res);
         for(let i = 0; i < res.length;i++){
-          console.log(res[i]);
           this.posts.push(res[i]);
         }
         this.feedSub$.unsubscribe();
@@ -173,8 +169,6 @@ export class StudioFeedComponent implements OnInit {
   }
 
   getComments(postId){
-    console.log("Get Comments", postId);
-
     this.studioFeedService.getComments(postId)
       .subscribe(res => {      
         let postToUpdate = this.posts.filter(obj => obj.id == postId);
@@ -183,14 +177,43 @@ export class StudioFeedComponent implements OnInit {
 
   }
 
-  likePost(post){
-    console.log(post);
+  removeComment(postId, author){
 
-    this.studioFeedService.likePost(post.id, this.user)
-      .then(function(){
-        console.log("liked post");
+  }
+
+
+  getLikes(postId){
+    this.studioFeedService.getLikes(postId)
+      .subscribe(res => {
+        let postToUpdate = this.posts.filter(obj => obj.id == postId);
+        postToUpdate[0]['likesRefDictionary'] = res['likesRefDictionary'];
       })
+  }
 
+  likePost(post){
+
+    if(post.likesRefDictionary.includes(this.user['uid'])){
+      console.log("Already Liked");
+      var that = this;
+      var sub = this.studioFeedService.removeLike(post.id, this.user['uid'])
+        .subscribe(res => {
+          this.getLikes(post.id);
+          console.log("Fin2");
+          sub.unsubscribe();
+        })
+   
+      
+
+
+    }else{
+      console.log("Liking post");
+      var that = this;
+      this.studioFeedService.likePost(post.id, this.user)
+        .then(function(){
+          that.getLikes(post.id);
+          console.log("Fin1");
+        })
+    }
   }
 
   hasLiked(post){
@@ -204,6 +227,9 @@ export class StudioFeedComponent implements OnInit {
          return 'liked-post';
        }
      }
+
+
+
   }
 
   postUpdate(){
