@@ -15,8 +15,11 @@ import { isNgTemplate } from '@angular/compiler';
 import { isFakeMousedownFromScreenReader } from '@angular/cdk/a11y';
 import { UploaderComponent } from '../uploader/uploader.component';
 
+import * as UIkit from 'uikit';
 
+declare var $: any;
 declare var UIkit: any;
+
 
 @Component({
   selector: 'app-studio-feed',
@@ -50,6 +53,8 @@ export class StudioFeedComponent implements OnInit {
   newPostDescription:string;
   newPostTaggedMembers:Array<string>;
   newPost:Post;
+
+  util = UIkit.util;
 
   @ViewChild('memberInput',{static: false}) memberInput: ElementRef<HTMLInputElement>;
   @ViewChild('auto',{static: false}) matAutocomplete: MatAutocomplete;
@@ -140,8 +145,9 @@ export class StudioFeedComponent implements OnInit {
     this.taggedOrgMembers.length = 0;
     
     this.child.clearUpload();
-    UIkit.accordion("#accordion-team").toggle();
-    UIkit.accordion("#accordion-image").toggle();
+
+    this.UTILITYCloseAccordion();
+  
   }
 
   getOrgDetails(orgId){
@@ -187,24 +193,19 @@ export class StudioFeedComponent implements OnInit {
       .subscribe(res => {
         let postToUpdate = this.posts.filter(obj => obj.id == postId);
         postToUpdate[0]['likesRefDictionary'] = res['likesRefDictionary'];
+        postToUpdate[0]['likes'] = res['likes'];
       })
   }
 
   likePost(post){
 
     if(post.likesRefDictionary.includes(this.user['uid'])){
-      console.log("Already Liked");
       var that = this;
       var sub = this.studioFeedService.removeLike(post.id, this.user['uid'])
         .subscribe(res => {
           this.getLikes(post.id);
-          console.log("Fin2");
           sub.unsubscribe();
         })
-   
-      
-
-
     }else{
       console.log("Liking post");
       var that = this;
@@ -216,10 +217,9 @@ export class StudioFeedComponent implements OnInit {
     }
   }
 
+  //is this even used anymore ?
   hasLiked(post){
     
-    console.log(post.likes.length);
-     
     for(let i = 0; i < post.likes.length;i++){
        console.log(post.likes[i], this.user['uid']);
        if(post.likes[i].author.uid == this.user['uid']){
@@ -227,9 +227,6 @@ export class StudioFeedComponent implements OnInit {
          return 'liked-post';
        }
      }
-
-
-
   }
 
   postUpdate(){
@@ -278,4 +275,41 @@ export class StudioFeedComponent implements OnInit {
        this.resetNewPostFields();
     }   
   }
+
+
+ UTILITYCloseAccordion(){
+
+  var teamAccordion = this.util.$('#accordion-team');
+  var imageAccordion = this.util.$('#accordion-image');
+
+  var test  = $('#teamAcc');
+
+
+  console.log(test);
+
+  if($('#teamAcc').hasClass("uk-open")){
+    console.log("open here");
+    UIkit.accordion(teamAccordion).toggle();
+  }
+
+  if($('#imageAcc').hasClass("uk-open")){
+    console.log("open here 2");
+    UIkit.accordion(imageAccordion).toggle();
+  }
+
+ 
+ /*  var element = this.util.$('.uk-accordion');
+  var open = this.util.$$('.uk-accordion > li.uk-open');
+  console.log("open", open);
+  var that = this;
+
+  this.util.each(open, function(el) {
+    // get index
+    var openIndex = that.util.index(el);
+    console.log(open);
+    // toggle it
+    UIkit.accordion(element).toggle(openIndex);
+  }); */
+
+ }
 }

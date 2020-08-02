@@ -23,7 +23,6 @@ export class CommentsComponent implements OnInit {
         this.user = res.payload.data();
       })
     
-      console.log("hit", this.post);
   }
 
   addComment(){

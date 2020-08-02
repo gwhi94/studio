@@ -29,7 +29,6 @@ export class UploadGateService {
   }
 
   sendUploads(){
-    console.log("HIT");
     const file = this.gatedUploads[0];
     const path = `studioBucket/${Date.now()}_${file.name}`;
     // Reference to storage bucket
