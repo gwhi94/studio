@@ -19,6 +19,10 @@ body:not(mat-icon){
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
+h1 {
+  font-size: 30px;
+}
+
 snack-bar-container {
     &.error {
       background-color: #b90005;
@@ -80,13 +84,13 @@ mat-form-field.mat-form-field-hide-placeholder .mat-form-field-label-wrapper{
   min-width: 80vw;
   font-weight: 200;
   height: 300px;
-  border: 2px dashed #f16624;
+  border: 2px dashed #e57373 ;
   border-radius: 5px;
   background: white;
   margin: 10px 0;
 
   &.hovering {
-      border: 2px solid #f16624;
+      border: 2px solid #66bb6a;
       color: #dadada !important;
   }
 

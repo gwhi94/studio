@@ -15,6 +15,10 @@ export class AppComponent {
   uid:string;
   displayName:string;
   orgName:string;
+  isAdmin:Boolean = false;
+
+  org:Object = {};
+  user:Object = {};
 
   constructor(private authService:AuthService, private dataService:DataService, private studioFeedService:StudioFeedService) { }
 
@@ -28,8 +32,17 @@ export class AppComponent {
     this.studioFeedService.getUser()
     .subscribe(res => {    
       let userDecoded = res.payload.data();
+
+      if(userDecoded['admin']){
+        this.isAdmin = true;
+      }else{
+        this.isAdmin = false;
+      }
+      
       this.getOrgDetails(userDecoded['orgId']);
       this.displayName = userDecoded['displayName'];
+
+      this.user = userDecoded;
 
     })
   
@@ -42,6 +55,8 @@ export class AppComponent {
       .subscribe(res => {
         let orgDecoded = res.payload.data();
         this.orgName = orgDecoded['orgName'];
+
+        this.org = orgDecoded;
       })
   }
 

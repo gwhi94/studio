@@ -1,0 +1,48 @@
+<h1>Admin for {{org.orgName}}</h1>
+<p class="uk-margin-remove-top uk-text-meta">Make Admin level changes to your Organization here.</p>
+
+<h4>Members in your Organization</h4>
+<p class="uk-text-meta">Add members here to allow them to create an account for {{org.orgName}}, the user then must sign up using the 
+    email set below. Note the Member name does not have to match.
+</p>
+<table class="uk-table uk-table-divider uk-table-small">
+    <thead>
+        <tr>
+            <th>Member Name</th>
+            <th>Email</th>
+            <th>Delete User</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        <tr *ngFor="let orgMember of org.orgMembers">
+            <td>{{orgMember.memberDisplayName}}</td>
+            <td>{{orgMember.memberEmail}} </td>
+            <td><button (click)="deleteMember(orgMember)" class="uk-button uk-margin-left uk-button-primary edit-button" uk-icon="trash"></button></td>
+        </tr>     
+    </tbody>
+</table>
+
+<button uk-toggle="target: #memberModal" class="uk-button uk-button-primary">Add Member</button>
+
+<!-- This is the modal -->
+<div id="memberModal" uk-modal>
+    <div class="uk-modal-dialog uk-modal-body">
+        <h2 class="uk-modal-title">Add Member</h2>
+
+        <form>
+            <fieldset class="uk-fieldset">       
+                <div class="uk-margin">
+                    <input name="memberName" [(ngModel)]="memberName" class="uk-input" type="text" placeholder="Member Name">
+                </div>
+                <div class="uk-margin">
+                    <input name="memberName" [(ngModel)]="memberEmail" class="uk-input" type="text" placeholder="Email">
+                </div>                 
+            </fieldset>
+        </form>
+        <button (click)="addMember()" class="uk-button uk-button-primary" type="button">Add Member</button>
+    </div>
+</div>
+
+
+

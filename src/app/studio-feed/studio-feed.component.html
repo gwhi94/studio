@@ -55,14 +55,12 @@
             </li>
         </ul>
     </form>
-    <button (click)="postUpdate()" class="uk-button uk-button-primary">Post</button>
+    <button [disabled]="newPost.postTitle.length < 1" (click)="postUpdate()" class="uk-button uk-button-primary">Post</button>
 </div>
 
 
 <div class="feed-container" > 
-    <div class="uk-card uk-card-default uk-card-post uk-margin-top uk-card-body uk-width-1-2@m" *ngFor="let post of posts">
-        
-      
+    <div uk-scrollspy="cls: uk-animation-slide-left; repeat: false" class="uk-card uk-card-default uk-card-post uk-margin-top uk-card-body uk-width-1-2@m" *ngFor="let post of posts">    
         <h2 class="uk-card-title uk-margin-small">{{post.user.displayName}}</h2>
         <hr>
   

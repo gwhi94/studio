@@ -1,12 +1,13 @@
 <nav class="uk-navbar-container uk-margin" uk-navbar>
   <div class="uk-navbar-left">
-      <a class="uk-navbar-item uk-logo" href="#">{{orgName}}</a>
+      <a class="uk-navbar-item uk-logo" routerLink="/studio">{{orgName}}</a>
   </div>
   <div class="uk-navbar-right">
 
     <ul class="uk-navbar-nav">
         <li><a href="#">Dark Mode ?</a></li>
-        <li>
+        <li><a href="#" routerLink="/org-admin" [state]="{data:{org:org,user:user}}">Admin</a></li>
+        <li>        
             <a href="#">Account</a>
             <div class="uk-navbar-dropdown">
                 <ul class="uk-nav uk-navbar-dropdown-nav">

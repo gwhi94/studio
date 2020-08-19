@@ -7,12 +7,14 @@ import { ForgotPasswordComponent } from './admin/forgot-password/forgot-password
 import { RegisterComponent } from './admin/register/register.component';  
 import { VerifyEmailComponent } from './admin/verify-email/verify-email.component';
 import { AuthGuard } from './guard/auth.guard';
+import { OrgAdminComponent } from './org-admin/org-admin.component';
 
 
 
 const routes: Routes = [
   
   {path:'studio', component:StudioFeedComponent, canActivate:[AuthGuard]},
+  {path:'org-admin', component:OrgAdminComponent, canActivate:[AuthGuard]},
   {path:'login', component:LoginComponent},
   {path:'', component:LoginComponent},
   {path:'register', component:RegisterComponent},

@@ -22,6 +22,7 @@ import { ForgotPasswordComponent } from './admin/forgot-password/forgot-password
 import { FormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatSnackBarModule } from '@angular/material';
+import { OrgAdminComponent } from './org-admin/org-admin.component';
 
 
 @NgModule({
@@ -32,6 +33,7 @@ import { MatSnackBarModule } from '@angular/material';
     RegisterComponent,
     VerifyEmailComponent,
     ForgotPasswordComponent,
+    OrgAdminComponent,
   ],
   imports: [
     BrowserModule,

@@ -7,6 +7,7 @@ import { VerifyEmailComponent } from './verify-email/verify-email.component';
 
 
 
+
 @NgModule({
   declarations: [LoginComponent, RegisterComponent, ForgotPasswordComponent, VerifyEmailComponent],
   imports: [

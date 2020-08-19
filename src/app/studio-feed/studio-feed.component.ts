@@ -282,11 +282,6 @@ export class StudioFeedComponent implements OnInit {
   var teamAccordion = this.util.$('#accordion-team');
   var imageAccordion = this.util.$('#accordion-image');
 
-  var test  = $('#teamAcc');
-
-
-  console.log(test);
-
   if($('#teamAcc').hasClass("uk-open")){
     console.log("open here");
     UIkit.accordion(teamAccordion).toggle();
@@ -296,20 +291,5 @@ export class StudioFeedComponent implements OnInit {
     console.log("open here 2");
     UIkit.accordion(imageAccordion).toggle();
   }
-
- 
- /*  var element = this.util.$('.uk-accordion');
-  var open = this.util.$$('.uk-accordion > li.uk-open');
-  console.log("open", open);
-  var that = this;
-
-  this.util.each(open, function(el) {
-    // get index
-    var openIndex = that.util.index(el);
-    console.log(open);
-    // toggle it
-    UIkit.accordion(element).toggle(openIndex);
-  }); */
-
  }
 }
